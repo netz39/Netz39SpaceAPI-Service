@@ -15,8 +15,9 @@ import isodate
 
 import json
 
-from src.SpaceApiEntry import SpaceApiEntry
-from src.SpaceStatusObserver import SpaceStatusObserver
+from PictureManager import PictureManager
+from SpaceApiEntry import SpaceApiEntry
+from SpaceStatusObserver import SpaceStatusObserver
 
 startup_timestamp = datetime.now()
 
@@ -84,12 +85,24 @@ class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-def make_app(observer):
+class PictureHandler(tornado.web.RequestHandler, ABC):
+    # noinspection PyAttributeOutsideInit
+    def initialize(self, picture_manager):
+        self.picture_manager = picture_manager
+
+    def get(self):
+        self.set_header("Content-Type", "image/png")
+        self.write(self.picture_manager.get_image())
+        self.finish()
+
+
+def make_app(observer, picture_manager):
     version_path = r"/v[0-9]"
     return tornado.web.Application([
         (version_path + r"/health", HealthHandler),
         (version_path + r"/oas3", Oas3Handler),
         (r"/", SpaceAPIHandler, dict(observer=observer)),
+        (r"/state.png", PictureHandler, dict(picture_manager=picture_manager)),
     ])
 
 
@@ -121,7 +134,13 @@ def main():
     )
     observer.start()
 
-    app = make_app(observer)
+    picture_manager = PictureManager(
+        is_open_func=observer.space_api_entry.is_open,
+        open_image_path="../assets/open.png",
+        closed_image_path="../assets/closed.png"
+    )
+
+    app = make_app(observer, picture_manager)
     sockets = tornado.netutil.bind_sockets(arg_port, '')
     server = tornado.httpserver.HTTPServer(app)
     server.add_sockets(sockets)
