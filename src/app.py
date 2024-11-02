@@ -101,7 +101,7 @@ def make_app(observer, picture_manager):
     return tornado.web.Application([
         (version_path + r"/health", HealthHandler),
         (version_path + r"/oas3", Oas3Handler),
-        (r"/", SpaceAPIHandler, dict(observer=observer)),
+        (r"/json", SpaceAPIHandler, dict(observer=observer)),
         (r"/state.png", PictureHandler, dict(picture_manager=picture_manager)),
     ])
 
