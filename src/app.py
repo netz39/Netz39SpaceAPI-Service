@@ -84,6 +84,16 @@ class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
         self.write(json.dumps(self.observer.get_space_api_entry(), indent=4))
         self.finish()
 
+class SpaceStateTextHandler(tornado.web.RequestHandler, ABC):
+    # noinspection PyAttributeOutsideInit
+    def initialize(self, observer):
+        self.observer = observer
+
+    def get(self):
+        self.set_header("Content-Type", "text/plain")
+        self.write("open" if self.observer.space_api_entry.is_open() else "closed")
+        self.finish()
+
 
 class PictureHandler(tornado.web.RequestHandler, ABC):
     # noinspection PyAttributeOutsideInit
@@ -97,11 +107,11 @@ class PictureHandler(tornado.web.RequestHandler, ABC):
 
 
 def make_app(observer, picture_manager):
-    version_path = r"/v[0-9]"
     return tornado.web.Application([
-        (version_path + r"/health", HealthHandler),
-        (version_path + r"/oas3", Oas3Handler),
-        (r"/", SpaceAPIHandler, dict(observer=observer)),
+        (r"/health", HealthHandler),
+        (r"/oas3", Oas3Handler),
+        (r"/json", SpaceAPIHandler, dict(observer=observer)),
+        (r"/text", SpaceStateTextHandler, dict(observer=observer)),
         (r"/state.png", PictureHandler, dict(picture_manager=picture_manager)),
     ])
 

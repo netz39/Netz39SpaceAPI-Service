@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Space Status API
+  version: 1.0.0
+  description: API for retrieving space status and related information.
+servers:
+  - url: http://localhost:8080/
+    description: Local development server
+  - url: https://spaceapi.n39.eu/
+    description: Netz39 SpaceAPI server
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Health check information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_version:
+                    type: string
+                  git_version:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: string
+                    format: duration
+  /oas3:
+    get:
+      summary: OpenAPI Specification
+      responses:
+        '200':
+          description: OpenAPI Specification
+          content:
+            text/plain:
+              schema:
+                type: string
+  /json:
+    get:
+      summary: Space API entry in JSON format
+      responses:
+        '200':
+          description: Space API entry
+          content:
+            application/json:
+              schema:
+                type: object
+  /text:
+    get:
+      summary: Space state in plain text
+      responses:
+        '200':
+          description: Space state
+          content:
+            text/plain:
+              schema:
+                type: string
+  /state.png:
+    get:
+      summary: Space state as an image
+      responses:
+        '200':
+          description: Space state image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary

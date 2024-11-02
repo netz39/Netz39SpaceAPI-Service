@@ -8,7 +8,7 @@ RUN git describe --always --dirty > /git-version.txt
 FROM python:3.12
 
 EXPOSE 8080
-HEALTHCHECK --interval=10s CMD curl --fail http://localhost:8080/v0/health || exit 1
+HEALTHCHECK --interval=10s CMD curl --fail http://localhost:8080/health || exit 1
 
 COPY src/OAS3.yml /
 
