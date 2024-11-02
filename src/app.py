@@ -15,6 +15,8 @@ import isodate
 
 import json
 
+from src.SpaceApiEntry import SpaceApiEntry
+from src.SpaceStatusObserver import SpaceStatusObserver
 
 startup_timestamp = datetime.now()
 
@@ -71,11 +73,23 @@ class Oas3Handler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-def make_app():
+class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
+    # noinspection PyAttributeOutsideInit
+    def initialize(self, observer):
+        self.observer = observer
+
+    def get(self):
+        self.set_header("Content-Type", "application/json")
+        self.write(json.dumps(self.observer.get_space_api_entry(), indent=4))
+        self.finish()
+
+
+def make_app(observer):
     version_path = r"/v[0-9]"
     return tornado.web.Application([
         (version_path + r"/health", HealthHandler),
         (version_path + r"/oas3", Oas3Handler),
+        (r"/", SpaceAPIHandler, dict(observer=observer)),
     ])
 
 
@@ -91,10 +105,23 @@ signal_received = False
 
 def main():
     arg_port = load_env('PORT', 8080)
+    arg_mqtt_broker_server = load_env('MQTT_BROKER', 'mqtt')
+    arg_mqtt_broker_port = load_env('MQTT_PORT', 1883)
+    arg_topic_status = load_env('MQTT_TOPIC_STATUS', 'status')
+    arg_topic_lastchange = load_env('MQTT_TOPIC_LASTCHANGE', 'lastchange')
 
     # Setup
 
-    app = make_app()
+    observer = SpaceStatusObserver(
+        broker=arg_mqtt_broker_server,
+        port=arg_mqtt_broker_port,
+        topic_status=arg_topic_status,
+        topic_lastchange=arg_topic_lastchange,
+        space_api_entry=SpaceApiEntry.create_netz39()
+    )
+    observer.start()
+
+    app = make_app(observer)
     sockets = tornado.netutil.bind_sockets(arg_port, '')
     server = tornado.httpserver.HTTPServer(app)
     server.add_sockets(sockets)
