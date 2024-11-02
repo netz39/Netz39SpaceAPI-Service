@@ -9,6 +9,11 @@
 Configuration is done using environment variables:
 
 * `PORT`: Target port when used with docker-compose (default `8080`)
+* `MQTT_BROKER`: MQTT broker server (default `mqtt`)
+* `MQTT_PORT`: MQTT broker port (default `1883`)
+* `MQTT_TOPIC_STATUS`: MQTT topic to listen for status messages (default `status`)
+* `MQTT_TOPIC_LASTCHANGE`: MQTT topic to listen for last change messages (default `lastchange`)
+
 
 ### Run with Docker
 
