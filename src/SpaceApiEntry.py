@@ -69,3 +69,6 @@ class SpaceApiEntry:
 
     def set_lastchange(self, lastchange):
         self.data["state"]["lastchange"] = lastchange
+
+    def is_open(self):
+        return self.data["state"]["open"]
