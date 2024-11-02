@@ -15,9 +15,9 @@ import isodate
 
 import json
 
-from src.PictureManager import PictureManager
-from src.SpaceApiEntry import SpaceApiEntry
-from src.SpaceStatusObserver import SpaceStatusObserver
+from PictureManager import PictureManager
+from SpaceApiEntry import SpaceApiEntry
+from SpaceStatusObserver import SpaceStatusObserver
 
 startup_timestamp = datetime.now()
 
