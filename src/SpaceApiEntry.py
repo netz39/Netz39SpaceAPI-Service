@@ -15,6 +15,10 @@ class SpaceApiEntry:
         entry.add_contact("twitter", "@netz39", is_issue_channel=True)
         entry.add_contact("ml", "list@netz39.de", is_issue_channel=True)
         entry.add_contact("jabber", "lounge@conference.jabber.n39.eu")
+        entry.add_contact("discord", "https://discord.netz39.de/")
+        entry.add_contact("github", "https://github.com/Netz39")
+        entry.add_contact("mastodon", "https://machteburch.social/@netz39")
+        entry.add_contact("youtube", "https://www.youtube.com/@Netz39De")        
 
         entry.add_feed("blog", "rss", "https://www.netz39.de/feed/")
         entry.add_feed("calendar", "ical", "https://www.netz39.de/feed/eo-events/")
