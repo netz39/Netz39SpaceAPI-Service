@@ -21,8 +21,8 @@ class SpaceApiEntry:
         entry.add_contact("youtube", "https://www.youtube.com/@Netz39De")        
         entry.add_contact("instagram", "https://www.instagram.com/netz_39/")
 
-        entry.add_feed("blog", "rss", "https://www.netz39.de/feed/")
-        entry.add_feed("calendar", "ical", "https://www.netz39.de/feed/eo-events/")
+        entry.add_feed("blog", "rss", "https://www.netz39.de/feed.xml")
+        entry.add_feed("calendar", "ical", "https://www.netz39.de/feed/eo-events/events.ics")
 
         return entry
 
