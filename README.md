@@ -45,4 +45,4 @@ docker-compose down
 
 ## License
 
-[MIT](LICENSE.txt) © 2024 Netz39 e.V. and contributors
+[MIT](LICENSE.txt) © 2024-2025 Netz39 e.V. and contributors
