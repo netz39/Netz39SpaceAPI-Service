@@ -90,7 +90,7 @@ class Oas3Handler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
+class SpaceAPIHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, observer):
         self.observer = observer
@@ -100,7 +100,7 @@ class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
         self.write(json.dumps(self.observer.get_space_api_entry(), indent=4))
         self.finish()
 
-class SpaceStateTextHandler(tornado.web.RequestHandler, ABC):
+class SpaceStateTextHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, observer):
         self.observer = observer
@@ -111,7 +111,7 @@ class SpaceStateTextHandler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-class PictureHandler(tornado.web.RequestHandler, ABC):
+class PictureHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, picture_manager):
         self.picture_manager = picture_manager
