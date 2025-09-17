@@ -96,7 +96,7 @@ class SpaceAPIHandler(BaseCORSHandler, ABC):
         self.observer = observer
 
     def get(self):
-        self.set_header("Content-Type", "application/json")
+        self.set_header("Content-Type", "application/json; charset=utf-8")
         self.write(json.dumps(self.observer.get_space_api_entry(), indent=4))
         self.finish()
 
