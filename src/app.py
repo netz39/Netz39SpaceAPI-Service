@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from abc import ABC
+from typing import Any
 
 import tornado.ioloop
 import tornado.web
@@ -20,6 +21,21 @@ from SpaceApiEntry import SpaceApiEntry
 from SpaceStatusObserver import SpaceStatusObserver
 
 startup_timestamp = datetime.now()
+
+class BaseCORSHandler(tornado.web.RequestHandler):
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with, content-type")
+        self.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+    def options(self, *args, **kwargs):
+        self.set_default_headers()
+        self.set_status(204)
+        self.finish()
+
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        self.set_default_headers()
+        super().write_error(status_code, **kwargs)
 
 
 class HealthHandler(tornado.web.RequestHandler, ABC):
@@ -74,17 +90,17 @@ class Oas3Handler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-class SpaceAPIHandler(tornado.web.RequestHandler, ABC):
+class SpaceAPIHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, observer):
         self.observer = observer
 
     def get(self):
-        self.set_header("Content-Type", "application/json")
+        self.set_header("Content-Type", "application/json; charset=utf-8")
         self.write(json.dumps(self.observer.get_space_api_entry(), indent=4))
         self.finish()
 
-class SpaceStateTextHandler(tornado.web.RequestHandler, ABC):
+class SpaceStateTextHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, observer):
         self.observer = observer
@@ -95,7 +111,7 @@ class SpaceStateTextHandler(tornado.web.RequestHandler, ABC):
         self.finish()
 
 
-class PictureHandler(tornado.web.RequestHandler, ABC):
+class PictureHandler(BaseCORSHandler, ABC):
     # noinspection PyAttributeOutsideInit
     def initialize(self, picture_manager):
         self.picture_manager = picture_manager
