@@ -1,16 +1,11 @@
 # Do not forget to create the .env file (see template)
 # before using this container!
 
-version: '2'
-
 services:
-    collector:
+    space-api-svc:
         restart: always
         build: .
-        environment:
-            PORT: 8080
+        env_file:
+            - .env
         ports:
             - $PORT:8080
-
-volumes:
-    db:
