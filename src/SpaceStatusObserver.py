@@ -45,3 +45,12 @@ class SpaceStatusObserver:
 
     def get_space_api_entry(self):
         return self.space_api_entry.data
+
+    def is_loop_running(self):
+        # Paho does not expose the loop thread state through its public API.
+        # noinspection PyProtectedMember
+        thread = self.client._thread
+        return thread is not None and thread.is_alive()
+
+    def is_connected(self):
+        return self.client.is_connected()

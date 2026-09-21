@@ -40,8 +40,9 @@ class BaseCORSHandler(tornado.web.RequestHandler):
 
 class HealthHandler(tornado.web.RequestHandler, ABC):
     # noinspection PyAttributeOutsideInit
-    def initialize(self):
+    def initialize(self, observer):
         self.git_version = self._load_git_version()
+        self.observer = observer
 
     @staticmethod
     def _load_git_version():
@@ -73,9 +74,13 @@ class HealthHandler(tornado.web.RequestHandler, ABC):
         health['timestamp'] = isodate.datetime_isoformat(datetime.now())
         health['uptime'] = isodate.duration_isoformat(datetime.now() - startup_timestamp)
 
+        mqtt_loop_running = self.observer.is_loop_running()
+        health['mqtt_loop_running'] = mqtt_loop_running
+        health['mqtt_connected'] = self.observer.is_connected()
+
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps(health, indent=4))
-        self.set_status(200)
+        self.set_status(200 if mqtt_loop_running else 503)
 
 
 class Oas3Handler(tornado.web.RequestHandler, ABC):
@@ -124,7 +129,7 @@ class PictureHandler(BaseCORSHandler, ABC):
 
 def make_app(observer, picture_manager):
     return tornado.web.Application([
-        (r"/health", HealthHandler),
+        (r"/health", HealthHandler, dict(observer=observer)),
         (r"/oas3", Oas3Handler),
         (r"/json", SpaceAPIHandler, dict(observer=observer)),
         (r"/text", SpaceStateTextHandler, dict(observer=observer)),
