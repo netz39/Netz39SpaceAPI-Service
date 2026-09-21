@@ -207,6 +207,7 @@ def main():
             register_signal(signal.SIGTERM, None)
 
     # Teardown
+    observer.stop()
 
     print("Server stopped")
 
