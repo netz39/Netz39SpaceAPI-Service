@@ -18,6 +18,7 @@ class SpaceApiEntry:
         entry.add_contact("github", "https://github.com/Netz39")
         entry.add_contact("mastodon", "https://machteburch.social/@netz39")
         entry.add_contact("instagram", "https://www.instagram.com/netz_39/")
+        # displays contact data and open/closed status on chaoszone.cz
         entry.add_contact("ext_habitat", "chaoszone")
 
         entry.add_feed("blog", "rss", "https://www.netz39.de/feed.xml")
